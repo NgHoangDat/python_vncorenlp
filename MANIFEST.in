@@ -1,4 +1,3 @@
 include README.md
-include LICENSE
-include CHANGELOG
-include python_vncorenlp/data
+include python_vncorenlp/data/*
+include python_vncorenlp/data/**/*

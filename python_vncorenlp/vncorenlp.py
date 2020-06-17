@@ -19,7 +19,13 @@ NER = 'ner.xz'
 DEP = 'dep.xz'
 
 
-Token = Tuple[str, str, str, str]
+class Token(NamedTuple):
+    text:str
+    pos:Optional[str]
+    ner:Optional[str]
+    dep:Optional[str]
+
+
 Sentence = List[Token]
 Doc = List[Sentence]
 
@@ -134,7 +140,7 @@ class Pipeline:
         doc = self.instance.annotateDoc(doc)
         return [
             [
-                (word.getForm(), word.getPosTag(), word.getNerLabel(), word.getDepLabel())
+                Token(word.getForm(), word.getPosTag(), word.getNerLabel(), word.getDepLabel())
                 for word in sentence
             ] for sentence in doc
         ]
@@ -149,7 +155,7 @@ class Pipeline:
         return [
             [
                 [
-                    (word.getForm(), word.getPosTag(), word.getNerLabel(), word.getDepLabel())
+                    Token(word.getForm(), word.getPosTag(), word.getNerLabel(), word.getDepLabel())
                     for word in sentence
                 ] for sentence in doc
             ] for doc in docs
