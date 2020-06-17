@@ -1,12 +1,12 @@
 import setuptools
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding='utf-8') as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="python_vncorenlp",
     packages=setuptools.find_packages(),
-    version="0.1.0",
+    version="0.1.1",
     author="nghoangdat",
     author_email="18.hoang.dat.12@gmail.com",
     description="python_vncorenlp",
@@ -15,7 +15,7 @@ setuptools.setup(
     keywords='python-vncorenlp vncorenlp nlp vietnamese-nlp parser word-segmentation tokenizer pos-tagger '
                'named-entity-recognition ner dependency-parser',
     url="https://github.com/NgHoangDat/python_vncorenlp.git",
-    download_url="https://github.com/NgHoangDat/python_vncorenlp/archive/v0.1.0.tar.gz",
+    download_url="https://github.com/NgHoangDat/python_vncorenlp/archive/v0.1.1.tar.gz",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

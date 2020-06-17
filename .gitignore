@@ -4,3 +4,7 @@ venv
 *.egg-info
 dist
 build
+*.ipynb
+**/*.ipynb
+**/__pycache__
+.ipynb_checkpoints

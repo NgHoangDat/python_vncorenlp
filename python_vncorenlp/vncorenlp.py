@@ -1,5 +1,6 @@
 import os
 import sys
+import functools
 from typing import *
 
 from . import protocols
@@ -18,7 +19,12 @@ NER = 'ner.xz'
 DEP = 'dep.xz'
 
 
-def install(jar_path:str, *options):
+Token = Tuple[str, str, str, str]
+Sentence = List[Token]
+Doc = List[Sentence]
+
+
+def install(*options, jar_path:str=CLASS_PATH):
     import jnius_config
 
     for option in options:
@@ -29,6 +35,7 @@ def install(jar_path:str, *options):
 
 
 class Package:
+    ArrayList:Any = None
     Vocabulary:Optional[Type[protocols.Vocabulary]] = None
     LexicalInitializer:Optional[Type[protocols.LexicalInitializer]] = None
     WordSegmenter:Optional[Type[protocols.WordSegmenter]] = None
@@ -41,6 +48,7 @@ class Package:
     def load_class(cls):
         from jnius import autoclass
 
+        cls.ArrayList = autoclass('java.util.ArrayList')
         cls.Vocabulary = autoclass('vn.corenlp.wordsegmenter.Vocabulary')
         cls.LexicalInitializer = autoclass('vn.pipeline.LexicalInitializer')
 
@@ -57,7 +65,36 @@ class Pipeline:
     def __init__(self):
         self.instance:Optional[protocols.VnCoreNLP] = None
 
-    def load(self, model_dir:str=MODEL_DIR, 
+    def load_default(self, use_segmenter:bool=True, use_postagger:bool=False, use_ner:bool=False, use_dep:bool=False):
+        vocab = None
+        segmenter = None
+        tagger = None
+        cluster = None
+        embedding = None
+        ner = None
+        dep = None
+
+        if use_segmenter:
+            vocab = VOCAB
+            segmenter = SEGMENTER
+
+        if use_postagger:
+            tagger = TAGGER
+        
+        if use_ner or use_dep:
+            cluster = CLUSTER
+            embedding = EMBEDDING
+
+        if use_ner:
+            ner = NER
+
+        if use_dep:
+            dep = DEP
+
+        self.load_custom(MODEL_DIR, vocab, segmenter, tagger, cluster, embedding, ner, dep)
+
+
+    def load_custom(self, model_dir:str=MODEL_DIR, 
             vocab:Optional[str]=None, segmenter:Optional[str]=None, 
             tagger:Optional[str]=None, 
             cluster:Optional[str]=None, embedding:Optional[str]=None, 
@@ -92,11 +129,31 @@ class Pipeline:
             dep_parser = Package.DependencyParser(os.path.join(model_dir, dep), lexica)
             self.instance.setDependencyParser(dep_parser)
 
-    def annotateText(self, text:str) -> List[List[Tuple[str, str, str, str]]]:
-        annotations = self.instance.annotate(text)
+    @functools.lru_cache(maxsize=256)
+    def annotate_doc(self, doc:str) -> Doc:
+        doc = self.instance.annotateDoc(doc)
         return [
             [
                 (word.getForm(), word.getPosTag(), word.getNerLabel(), word.getDepLabel())
                 for word in sentence
-            ] for sentence in annotations
+            ] for sentence in doc
         ]
+
+    @functools.lru_cache(maxsize=256)
+    def __annotate_docs(self, docs:Tuple[str, ...]) -> List[Doc]:
+        docs_array = Package.ArrayList()
+        for doc in docs:
+            docs_array.add(doc)
+
+        docs = self.instance.annotateDocs(docs_array)
+        return [
+            [
+                [
+                    (word.getForm(), word.getPosTag(), word.getNerLabel(), word.getDepLabel())
+                    for word in sentence
+                ] for sentence in doc
+            ] for doc in docs
+        ]
+
+    def annotate_docs(self, docs:Sequence[str]) -> List[Doc]:
+        return self.__annotate_docs(tuple(docs))

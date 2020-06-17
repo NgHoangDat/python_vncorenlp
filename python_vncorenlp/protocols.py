@@ -3,7 +3,6 @@ from typing import *
 from typing_extensions import Protocol
 
 
-
 class Vocabulary(Protocol):
 
     def __init__(self, path:str):
