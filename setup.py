@@ -26,7 +26,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
         "Topic :: Text Processing :: Linguistic"
     ],
-    include_package_data=True,
+    # include_package_data=True,
     python_requires='>=3.6',
     install_requires=[
         'pyjnius',

@@ -1,3 +1,1 @@
 include README.md
-include python_vncorenlp/data/*
-include python_vncorenlp/data/**/*
