@@ -7,6 +7,7 @@ from . import protocols
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 CLASS_PATH = os.path.join(DATA_DIR, 'vncorenlp.jar')
+MODEL_DIR = os.path.join(DATA_DIR, 'models')
 
 VOCAB = 'vocab'
 SEGMENTER = 'wordsegmenter.rdr'
@@ -29,6 +30,17 @@ Doc = List[Sentence]
 
 
 def install(*options, jar_path:str=CLASS_PATH):
+    if not os.path.exists(MODEL_DIR):
+        import urllib.request
+        from io import BytesIO
+        from zipfile import ZipFile
+
+        url = 'https://github.com/NgHoangDat/python_vncorenlp/raw/master/python_vncorenlp/data/models.zip'
+        response = urllib.request.urlopen(url)
+        data = BytesIO(response.read())
+        with ZipFile(data) as f:
+            f.extractall(DATA_DIR)
+        
     import jnius_config
 
     for option in options:
@@ -69,7 +81,7 @@ class Pipeline:
     def __init__(self):
         self.instance:Optional[protocols.VnCoreNLP] = None
 
-    def load_model(self, model_dir:str, use_segmenter:bool=True, use_postagger:bool=False, use_ner:bool=False, use_dep:bool=False):
+    def load_model(self, model_dir:str=MODEL_DIR, use_segmenter:bool=True, use_postagger:bool=False, use_ner:bool=False, use_dep:bool=False):
         vocab = None
         segmenter = None
         tagger = None

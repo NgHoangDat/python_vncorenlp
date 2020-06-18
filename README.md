@@ -20,8 +20,6 @@ You can install this package from PyPI using [pip](http://www.pip-installer.org)
 $ pip install python-vncorenlp
 ```
 
-Download python_vncorenlp/data/models folder in this repo.
-
 ## Example
 
 ```python
