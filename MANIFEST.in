@@ -1,1 +1,2 @@
 include README.md
+include python_vncorenlp/data/*.jar

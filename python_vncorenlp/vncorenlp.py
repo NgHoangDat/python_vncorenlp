@@ -5,10 +5,8 @@ from typing import *
 
 from . import protocols
 
-
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 CLASS_PATH = os.path.join(DATA_DIR, 'vncorenlp.jar')
-MODEL_DIR = os.path.join(DATA_DIR, 'models')
 
 VOCAB = 'vocab'
 SEGMENTER = 'wordsegmenter.rdr'
@@ -71,7 +69,7 @@ class Pipeline:
     def __init__(self):
         self.instance:Optional[protocols.VnCoreNLP] = None
 
-    def load_default(self, use_segmenter:bool=True, use_postagger:bool=False, use_ner:bool=False, use_dep:bool=False):
+    def load_model(self, model_dir:str, use_segmenter:bool=True, use_postagger:bool=False, use_ner:bool=False, use_dep:bool=False):
         vocab = None
         segmenter = None
         tagger = None
@@ -97,10 +95,10 @@ class Pipeline:
         if use_dep:
             dep = DEP
 
-        self.load_custom(MODEL_DIR, vocab, segmenter, tagger, cluster, embedding, ner, dep)
+        self.load_custom(model_dir, vocab, segmenter, tagger, cluster, embedding, ner, dep)
 
 
-    def load_custom(self, model_dir:str=MODEL_DIR, 
+    def load_custom(self, model_dir:str, 
             vocab:Optional[str]=None, segmenter:Optional[str]=None, 
             tagger:Optional[str]=None, 
             cluster:Optional[str]=None, embedding:Optional[str]=None, 

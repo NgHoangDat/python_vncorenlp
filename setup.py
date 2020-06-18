@@ -4,7 +4,7 @@ with open("README.md", "r", encoding='utf-8') as fh:
     long_description = fh.read()
 
 
-__version__ = 'v0.1.2'
+__version__ = 'v0.1.4'
 
 
 setuptools.setup(
@@ -26,7 +26,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
         "Topic :: Text Processing :: Linguistic"
     ],
-    # include_package_data=True,
+    include_package_data=True,
     python_requires='>=3.6',
     install_requires=[
         'pyjnius',

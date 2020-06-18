@@ -20,6 +20,8 @@ You can install this package from PyPI using [pip](http://www.pip-installer.org)
 $ pip install python-vncorenlp
 ```
 
+Download python_vncorenlp/data/models folder in this repo.
+
 ## Example
 
 ```python
@@ -33,7 +35,7 @@ python_vncorenlp.Package.load_class()
 
 def main():
     pipeline = python_vncorenlp.Pipeline()
-    pipeline.load_default()
+    pipeline.load_model('models')
     print(pipeline.annotate_doc('Tôi là chàng sinh viên Bách Khoa'))
     print(pipeline.annotate_docs([
         'Tôi là chàng sinh viên Bách Khoa',
